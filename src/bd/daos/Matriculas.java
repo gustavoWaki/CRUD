@@ -29,7 +29,7 @@ public class Matriculas
         }
         catch (SQLException erro)
         {
-            throw new Exception ("Erro ao procurar livro");
+            throw new Exception ("Erro ao procurar matricula");
         }
 
         return retorno;
@@ -38,7 +38,7 @@ public class Matriculas
     public static void incluir (Matricula matricula) throws Exception
     {
         if (matricula == null)
-            throw new Exception ("Matrícula não fornecida");
+            throw new Exception ("Matricula nao fornecida");
 
         try
         {
@@ -62,7 +62,7 @@ public class Matriculas
         catch (SQLException erro)
         {
 			BDMySQL.COMANDO.rollback();
-            throw new Exception ("Erro ao inserir matrícula");
+            throw new Exception ("Erro ao inserir matricula");
         }
     }
 
@@ -88,17 +88,17 @@ public class Matriculas
         catch (SQLException erro)
         {
 			BDMySQL.COMANDO.rollback();
-            throw new Exception ("Erro ao excluir a matrícula");
+            throw new Exception ("Erro ao excluir a matricula");
         }
     }
 
     public static void alterar (Matricula matricula) throws Exception
     {
         if (matricula == null)
-            throw new Exception ("Matrícula não fornecida");
+            throw new Exception ("Matricula nao fornecida");
 
         if (!cadastrado (matricula.getRa()))
-            throw new Exception ("Não cadastrado");
+            throw new Exception ("Nao cadastrado");
 
         try
         {
@@ -124,7 +124,7 @@ public class Matriculas
         catch (SQLException erro)
         {
 			BDMySQL.COMANDO.rollback();
-            throw new Exception ("Erro ao atualizar dados de matrícula");
+            throw new Exception ("Erro ao atualizar dados de matricula");
         }
     }
 
@@ -147,7 +147,7 @@ public class Matriculas
             MeuResultSet resultado = (MeuResultSet)BDMySQL.COMANDO.executeQuery ();
 
             if (!resultado.first())
-                throw new Exception ("Não cadastrado");
+                throw new Exception ("Nao cadastrado");
 
             matricula = new Matricula(resultado.getInt   ("RA"),
                                       resultado.getString("NOME"),
@@ -156,7 +156,7 @@ public class Matriculas
         }
         catch (SQLException erro)
         {
-            throw new Exception ("Erro ao procurar matrícula");
+            throw new Exception ("Erro ao procurar matricula");
         }
 
         return matricula;
