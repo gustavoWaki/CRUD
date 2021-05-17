@@ -67,10 +67,10 @@ public class Matricula implements Cloneable
     {
         String ret="";
 
-        ret+="RA: "+this.ra  +"\n";
-        ret+="Nome: "+this.nome + "\n";
-        ret+="CEP: "+this.cep + "\n";
-        ret+="CPF: "+this.cpf + "\n";
+        ret+="RA:    "+this.ra  +"\n";
+        ret+="Nome:  "+this.nome + "\n";
+        ret+="CEP:   "+this.cep + "\n";
+        ret+="CPF:   "+this.cpf + "\n";
 
         return ret;
     }

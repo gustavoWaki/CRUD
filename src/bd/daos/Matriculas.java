@@ -105,19 +105,18 @@ public class Matriculas
             String sql;
 
             sql = "UPDATE MATRICULA " +
-                  "SET RA=? " +
-                  "SET NOME=? " +
-                  "SET CEP=?" +
-                  "SET CPF=?" +
-                  "WHERE RA = ?";
+                  "SET NOME=? ," +
+                  "CEP=? ," +
+                  "CPF=? " +
+                  "WHERE RA=?";
 
             BDMySQL.COMANDO.prepareStatement (sql);
 
-            BDMySQL.COMANDO.setInt   (1, matricula.getRa ());
-            BDMySQL.COMANDO.setString(2, matricula.getNome ());
-            BDMySQL.COMANDO.setInt   (3, matricula.getCep ());
-            BDMySQL.COMANDO.setString   (4, matricula.getCpf ());
-            BDMySQL.COMANDO.setInt   (5, matricula.getRa ());
+            BDMySQL.COMANDO.setString(1, matricula.getNome ());
+            BDMySQL.COMANDO.setInt   (2, matricula.getCep ());
+            BDMySQL.COMANDO.setString   (3, matricula.getCpf ());
+            BDMySQL.COMANDO.setInt   (4, matricula.getRa ());
+
 
             BDMySQL.COMANDO.executeUpdate ();
             BDMySQL.COMANDO.commit        ();
