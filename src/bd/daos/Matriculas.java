@@ -53,8 +53,8 @@ public class Matriculas
 
             BDMySQL.COMANDO.setInt   (1, matricula.getRa ());
             BDMySQL.COMANDO.setString(2, matricula.getNome ());
-            BDMySQL.COMANDO.setInt   (2, matricula.getCep ());
-            BDMySQL.COMANDO.setString   (2, matricula.getCpf ());
+            BDMySQL.COMANDO.setInt   (3, matricula.getCep ());
+            BDMySQL.COMANDO.setString   (4, matricula.getCpf ());
 
             BDMySQL.COMANDO.executeUpdate ();
             BDMySQL.COMANDO.commit        ();
@@ -115,8 +115,9 @@ public class Matriculas
 
             BDMySQL.COMANDO.setInt   (1, matricula.getRa ());
             BDMySQL.COMANDO.setString(2, matricula.getNome ());
-            BDMySQL.COMANDO.setInt   (1, matricula.getCep ());
-            BDMySQL.COMANDO.setString   (1, matricula.getCpf ());
+            BDMySQL.COMANDO.setInt   (3, matricula.getCep ());
+            BDMySQL.COMANDO.setString   (4, matricula.getCpf ());
+            BDMySQL.COMANDO.setInt   (5, matricula.getRa ());
 
             BDMySQL.COMANDO.executeUpdate ();
             BDMySQL.COMANDO.commit        ();
