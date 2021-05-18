@@ -50,17 +50,10 @@ public class App {
         frame.setVisible(true);
     }
 
-    public void infoCep(Matricula mat)
-    {
-        Logradouro log = (Logradouro) ClienteWS.getObjeto(Logradouro.class, "https://api.postmon.com.br/v1/cep", String.valueOf(mat.getCep()));
-        txtRua.setText(log.getLogradouro());
-        txtBairro.setText(log.getBairro());
-        txtCidade.setText(log.getCidade());
-        txtEstado.setText(log.getEstado());
-    }
-
     public App()
     {
+        AppMethods app = new AppMethods();
+
         btnConfirmar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -68,57 +61,51 @@ public class App {
                 {
                     if(!rdBtnInserir.isSelected() && !rdBtnAtualizar.isSelected() && !rdBtnDeletar.isSelected())
                         JOptionPane.showMessageDialog(null, "Selecione uma operacao antes de Confirmar!");
+
                     else if(!Matriculas.cadastrado(Integer.parseInt(txtRA.getText())) && !rdBtnInserir.isSelected())
                         JOptionPane.showMessageDialog(null, "O RA digitado nao esta cadastrado!");
+
                     else if(Matriculas.cadastrado(Integer.parseInt(txtRA.getText())) && rdBtnInserir.isSelected())
                         JOptionPane.showMessageDialog(null, "O RA digitado ja existe!");
+
                     else
                     {
-                        Matricula mat = new Matricula(Integer.parseInt(txtRA.getText()), txtNome.getText(), Integer.parseInt(txtCEP.getText()), txtCPF.getText());
-
                         if (rdBtnInserir.isSelected())
                         {
+                            Matricula mat = new Matricula(Integer.parseInt(txtRA.getText()), txtNome.getText(), Integer.parseInt(txtCEP.getText()), txtCPF.getText());
                             Matriculas.incluir(mat); // inclui os dados digitados no BD
 
                             // Demonstra os dados digitados na tela
-                            txtRARecebido.setText(String.valueOf(mat.getRa()));
-                            txtNomeRecebido.setText(mat.getNome());
-                            txtCPFRecebido.setText(mat.getCpf());
-                            infoCep(mat);
+                            app.alterarTexto(txtRARecebido, String.valueOf(mat.getRa()),
+                                    txtNomeRecebido, mat.getNome(),
+                                    txtCPFRecebido, mat.getCpf());
+
+                            app.infoCep(mat, txtRua, txtBairro, txtCidade, txtEstado);
                         }
                         else if (rdBtnAtualizar.isSelected())
                         {
+                            Matricula mat = new Matricula(Integer.parseInt(txtRA.getText()), txtNome.getText(), Integer.parseInt(txtCEP.getText()), txtCPF.getText());
                             Matriculas.alterar(mat); // altera os dados do BD
 
                             // Demonstra os dados digitados na tela
-                            txtRARecebido.setText(String.valueOf(mat.getRa()));
-                            txtNomeRecebido.setText(mat.getNome());
-                            txtCPFRecebido.setText(mat.getCpf());
-                            infoCep(mat);
+                            app.alterarTexto(txtRARecebido, String.valueOf(mat.getRa()),
+                                    txtNomeRecebido, mat.getNome(),
+                                    txtCPFRecebido, mat.getCpf());
+
+                            app.infoCep(mat, txtRua, txtBairro, txtCidade, txtEstado);
                         }
                         else if(rdBtnDeletar.isSelected())
                         {
-                            Matricula matDelete = new Matricula(Matriculas.getMatricula(Integer.parseInt(txtRARecebido.getText())));
+                            JOptionPane.showMessageDialog(null, "vamo");
                             Matriculas.excluir(Integer.parseInt(txtRARecebido.getText())); // Deleta os dados do BD
 
-                            txtRARecebido.setText("");
-                            txtNomeRecebido.setText("");
-                            txtCPFRecebido.setText("");
-                            txtRua.setText("");
-                            txtBairro.setText("");
-                            txtCidade.setText("");
-                            txtEstado.setText("");
+                            app.limparCampos(txtRARecebido, txtNomeRecebido, txtCPFRecebido,
+                                             txtRua, txtBairro, txtCidade, txtEstado);
                         }
-                        // Deixa os campos inalteráveis
-                        txtNome.setEnabled(false);
-                        txtCEP.setEnabled(false);
-                        txtCPF.setEnabled(false);
 
-                        // Limpa os campos de texto
-                        txtRA.setText("");
-                        txtNome.setText("");
-                        txtCEP.setText("");
-                        txtCPF.setText("");
+                        app.desabilitarCampos(txtNome, txtCEP, txtCPF); // Desabilita os campos
+
+                        app.limparCampos(txtRA, txtNome, txtCEP, txtCPF); // Limpa os campos de texto
                     }
                 }
                 catch (Exception err)
@@ -131,48 +118,38 @@ public class App {
         rdBtnInserir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                rdBtnAtualizar.setSelected(false);
-                rdBtnDeletar.setSelected(false);
-
-                //permitir entrada de dados
-                txtNome.setEnabled(true);
-                txtCEP.setEnabled(true);
-                txtCPF.setEnabled(true);
+                app.desabilitarRdBtn(rdBtnAtualizar, rdBtnDeletar);
+                app.habilitarCampos(txtNome, txtCEP, txtCPF); // permitir entrada de dados
             }
         });
         rdBtnAtualizar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                rdBtnInserir.setSelected(false);
-                rdBtnDeletar.setSelected(false);
+                app.desabilitarRdBtn(rdBtnInserir, rdBtnDeletar);
 
                 try
                 {
                     if(txtRA.getText().equals(""))
                     {
-                        rdBtnAtualizar.setSelected(false);
+                        app.desabilitarRdBtn(rdBtnAtualizar);
                         JOptionPane.showMessageDialog(null, "Preencha o campo do RA antes de Atualizar!");
                     }
                     else if(!Matriculas.cadastrado(Integer.parseInt(txtRA.getText())))
                     {
-                        rdBtnAtualizar.setSelected(false);
+                        app.desabilitarRdBtn(rdBtnAtualizar);
                         JOptionPane.showMessageDialog(null, "O RA digitado nao esta cadastrado");
                     }
                     else
                     {
                         Matricula mat = new Matricula(Matriculas.getMatricula(Integer.parseInt(txtRA.getText())));
 
-                        txtNome.setText(mat.getNome());
-                        txtCEP.setText(String.valueOf(mat.getCep()));
-                        txtCPF.setText(mat.getCpf());
-                        txtNome.setEnabled(true);
-                        txtCEP.setEnabled(true);
-                        txtCPF.setEnabled(true);
+                        app.alterarTexto(txtNome, mat.getNome(), txtCEP, String.valueOf(mat.getCep()), txtCPF, mat.getCpf());
+                        app.habilitarCampos(txtNome, txtCEP, txtCPF);
 
-                        txtRARecebido.setText(String.valueOf(mat.getRa()));
-                        txtNomeRecebido.setText(mat.getNome());
-                        txtCPFRecebido.setText(mat.getCpf());
-                        infoCep(mat);
+                        app.alterarTexto(txtRARecebido, String.valueOf(mat.getRa()), txtNomeRecebido,
+                                         mat.getNome(), txtCPFRecebido, mat.getCpf());
+
+                        app.infoCep(mat, txtRua, txtBairro, txtCidade, txtEstado);
                     }
                 }
                 catch(Exception err)
@@ -185,43 +162,21 @@ public class App {
         rdBtnDeletar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                rdBtnInserir.setSelected(false);
-                rdBtnAtualizar.setSelected(false);
-
-                txtNome.setEnabled(false);
-                txtCEP.setEnabled(false);
-                txtCPF.setEnabled(false);
-                txtNome.setText("");
-                txtCEP.setText("");
-                txtCPF.setText("");
+                app.desabilitarRdBtn(rdBtnInserir, rdBtnAtualizar);
+                app.limparCampos(txtNome, txtCEP, txtCPF);
+                app.desabilitarCampos(txtNome, txtCEP, txtCPF);
             }
         });
 
         btnLimpar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // limpa os campos
-                txtRA.setText("");
-                txtNome.setText("");
-                txtCEP.setText("");
-                txtCPF.setText("");
-                txtRARecebido.setText("");
-                txtNomeRecebido.setText("");
-                txtCPFRecebido.setText("");
-                txtRua.setText("");
-                txtBairro.setText("");
-                txtCidade.setText("");
-                txtEstado.setText("");
+                app.limparCampos(txtRA, txtNome, txtCEP, txtCPF, txtRARecebido,
+                                 txtNomeRecebido, txtCPFRecebido,
+                                 txtRua, txtBairro, txtCidade, txtEstado);
 
-                // Remove a seleção da operação
-                rdBtnInserir.setSelected(false);
-                rdBtnAtualizar.setSelected(false);
-                rdBtnDeletar.setSelected(false);
-
-                // Desabilita os campos
-                txtNome.setEnabled(false);
-                txtCEP.setEnabled(false);
-                txtCPF.setEnabled(false);
+                app.desabilitarRdBtn(rdBtnInserir, rdBtnAtualizar, rdBtnDeletar);
+                app.desabilitarCampos(txtNome, txtCEP, txtCPF);
             }
         });
 
@@ -232,16 +187,16 @@ public class App {
                 {
                     if(txtRA.getText().equals(""))
                         JOptionPane.showMessageDialog(null, "Preencha os campos antes de Consultar!");
+
                     else if(!Matriculas.cadastrado(Integer.parseInt(txtRA.getText())))
                         JOptionPane.showMessageDialog(null, "O RA digitado nao esta cadastrado!");
+
                     else
                     {
                         Matricula mat = new Matricula(Matriculas.getMatricula(Integer.parseInt(txtRA.getText())));
 
-                        txtRARecebido.setText(String.valueOf(mat.getRa()));
-                        txtNomeRecebido.setText(mat.getNome());
-                        txtCPFRecebido.setText(mat.getCpf());
-                        infoCep(mat);
+                        app.alterarTexto(txtRARecebido, String.valueOf(mat.getRa()), txtNomeRecebido, mat.getNome(), txtCPFRecebido, mat.getCpf());
+                        app.infoCep(mat, txtRua, txtBairro, txtCidade, txtEstado);
                     }
                 }
                 catch (Exception err)
@@ -256,12 +211,8 @@ public class App {
             public void itemStateChanged(ItemEvent e) {
                 if(rdBtnInserir.isSelected() == false && rdBtnAtualizar.isSelected())
                 {
-                    txtNome.setEnabled(false);
-                    txtCEP.setEnabled(false);
-                    txtCPF.setEnabled(false);
-                    txtNome.setText("");
-                    txtCEP.setText("");
-                    txtCPF.setText("");
+                    app.desabilitarCampos(txtNome, txtCEP, txtCPF);
+                    app. limparCampos(txtNome, txtCPF, txtCPF);
                 }
             }
         });
