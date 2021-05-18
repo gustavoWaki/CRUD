@@ -66,7 +66,7 @@ public class ClienteWS
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
             connection.setUseCaches(false);
-	    connection.setConnectTimeout(15000);
+	        connection.setConnectTimeout(15000);
             //connection.setRequestProperty("login", "seulogin");
             //connection.setRequestProperty("senha", "suasenha");
             connection.setRequestProperty("Content-Type", "application/json");
