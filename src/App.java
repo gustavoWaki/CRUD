@@ -96,12 +96,17 @@ public class App {
                         }
                         else if(rdBtnDeletar.isSelected())
                         {
-                            JOptionPane.showMessageDialog(null, "vamo");
-                            Matriculas.excluir(Integer.parseInt(txtRARecebido.getText())); // Deleta os dados do BD
+                            Matricula mat = new Matricula(Matriculas.getMatricula(Integer.parseInt(txtRA.getText())));
+                            Matriculas.excluir(Integer.parseInt(txtRA.getText())); // Deleta os dados do BD
 
-                            app.limparCampos(txtRARecebido, txtNomeRecebido, txtCPFRecebido,
-                                             txtRua, txtBairro, txtCidade, txtEstado);
+                            // Demonstra os dados digitados na tela
+                            app.alterarTexto(txtRARecebido, String.valueOf(mat.getRa()),
+                                    txtNomeRecebido, mat.getNome(),
+                                    txtCPFRecebido, mat.getCpf());
+
+                            app.infoCep(mat, txtRua, txtBairro, txtCidade, txtEstado);
                         }
+
 
                         app.desabilitarCampos(txtNome, txtCEP, txtCPF); // Desabilita os campos
 
@@ -212,7 +217,7 @@ public class App {
                 if(rdBtnInserir.isSelected() == false && rdBtnAtualizar.isSelected())
                 {
                     app.desabilitarCampos(txtNome, txtCEP, txtCPF);
-                    app. limparCampos(txtNome, txtCPF, txtCPF);
+                    app. limparCampos(txtNome, txtCEP, txtCPF);
                 }
             }
         });
